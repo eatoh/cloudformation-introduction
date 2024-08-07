@@ -1,0 +1,57 @@
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: “A sample template”
+
+Parameters:
+  InstanceTypeParameter:
+    Description: Enter t2.micro, m1.small, or m1.large. Default is t2.micro.
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - m1.small
+      - m1.large
+
+Resources:
+  WebServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0427090fd1714168b"
+      InstanceType: 
+        Ref: InstanceTypeParameter
+      KeyName: "mmjpjemkp"
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeType: "io1"
+            Iops: "200"
+            DeleteOnTermination: "true"
+            VolumeSize: '10'
+      Tags:
+        - Key: "Name"
+          Value: "WebServer"
+        - Key: "Environment"
+          Value: "Prod"
+  AppServer:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0427090fd1714168b"
+      InstanceType: t2.micro
+      KeyName: "mmjpjemkp"
+      BlockDeviceMappings:
+        - DeviceName: "/dev/xvda"
+          Ebs:
+            VolumeType: io1
+            Iops: '200'
+            DeleteOnTermination: "true"
+            VolumeSize: "10"
+      Tags:
+        - Key: "Name"
+          Value: "AppServer"
+        - Key: "Environment"
+          Value: "Dev"
+  S3BucketInvoice:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: kotoh6
+      AccessControl: Private
